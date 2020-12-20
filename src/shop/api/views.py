@@ -11,14 +11,18 @@ class ShopCarRUDView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsOwnerOrReadOnly]
 
     def get_queryset(self):
-        print(self)
+        car_id = self.kwargs.get('pk')
         """
         if self.request.method == 'GET':
             car = Car.objects.all().update(views=F('views') + 1)
             print(car[0].views)
         """
-        car = Car.objects.all()
-        return car
+        #Update car views
+        car_detail = Car.objects.get(id=car_id)
+        car_detail.views += 1
+        car_detail.save(update_fields=['views'])
+
+        return Car.objects.all()
 
 
 class ShopCarAPIView(mixins.CreateModelMixin, generics.ListAPIView):

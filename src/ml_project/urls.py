@@ -15,9 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
+from django_registration.backends.one_step.views import RegistrationView
+from users.forms import ShopUserForm
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('auth/register/', RegistrationView.as_view(form_class=ShopUserForm, success_url="/"),name="django_registration_register"),
+    path('auth/',include("django_registration.backends.one_step.urls")),
+    path('auth/',include("django.contrib.auth.urls")),
     re_path(r'^api/cars/', include(('shop.api.urls','shop'),namespace='api-cars')),
     re_path(r'^api/users/', include(('users.api.urls','users'),namespace='api-users')),
 ]

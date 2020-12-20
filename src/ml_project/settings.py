@@ -40,6 +40,11 @@ INSTALLED_APPS = [
 
     'rest_framework',
 
+    'rest_auth',
+    'rest_auth.registration',
+
+    'crispy_forms',
+
     'users',
     'shop',
 ]
@@ -59,7 +64,7 @@ ROOT_URLCONF = 'ml_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -131,6 +136,9 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOGIN_URL = "auth/login/"
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
