@@ -2,13 +2,17 @@ from django.db import models
 from django.conf import settings
 from django.core.validators import MaxValueValidator,MinValueValidator
 
+from rest_framework.reverse import reverse as api_reverse
+
+from datetime import date
+
 User = settings.AUTH_USER_MODEL
 
 # Create your models here.
 class Car(models.Model):
     user_id = models.ForeignKey(User, default=1, null=True,on_delete=models.CASCADE)
     car_model = models.CharField(max_length=150,null=True)
-    release_year = models.DateTimeField(null=True)
+    release_year = models.DateField(null=True)
     shell = models.CharField(max_length=150,null=True)
     mileage = models.IntegerField(null=True)
     transmission = models.CharField(max_length=150,null=True)
@@ -19,6 +23,15 @@ class Car(models.Model):
     price = models.CharField(max_length=150,null=True)
     engine_volume = models.CharField(max_length=150,null=True)
     city = models.CharField(max_length=250,null=True)
+    views = models.IntegerField(null=True,default=0)
+    added_to_wishlist = models.IntegerField(null=True,validators=[MaxValueValidator(1),MinValueValidator(0)])
+    created_date = models.DateTimeField(auto_now_add=True)
+    post_name = models.CharField(max_length=300,null=True)
+    post_description = models.TextField(null=True)
+
+    @property
+    def owner(self):
+        return self.user_id
 
     class Meta:
         verbose_name = "car"
@@ -27,15 +40,5 @@ class Car(models.Model):
     def __str__(self):
         return self.car_model
 
-class Post(models.Model):
-    car_id = models.ForeignKey(Car, null=True,on_delete=models.CASCADE)
-    post_name = models.CharField(max_length=300,null=True)
-    post_description = models.TextField(null=True)
-    user_id = models.ForeignKey(User, default=1, null=True,on_delete=models.CASCADE)
-    views = models.IntegerField(null=True)
-    added_to_wishlist = models.IntegerField(null=True,validators=[MaxValueValidator(1),MinValueValidator(0)])
-    created_date = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        verbose_name = "post"
-        verbose_name_plural = "posts"
+    def get_api_detail_url(self):
+        return api_reverse("api-cars:car-rud",kwargs={'pk':self.pk})

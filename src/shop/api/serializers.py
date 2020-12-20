@@ -1,13 +1,13 @@
 from rest_framework import serializers
 
-from shop.models import Car, Post
-
-class PostSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Post
-        fields = '__all__'
+from shop.models import Car
 
 class CarSerializer(serializers.ModelSerializer):
+    url = serializers.SerializerMethodField(read_only=True)
+
+    def get_url(self, obj):
+        return obj.get_api_detail_url()
+
     class Meta:
         model = Car
         fields = '__all__'
