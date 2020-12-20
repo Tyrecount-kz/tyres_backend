@@ -5,4 +5,4 @@ class ShopUserForm(RegistrationForm):
 
     class Meta(RegistrationForm):
         model = ShopUser
-        fields = '__all__'
+        exclude = ['password','is_admin','is_staff','is_superuser',]
