@@ -17,7 +17,11 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django_registration.backends.one_step.views import RegistrationView
 from users.forms import ShopUserForm
-
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+from users.api.views import ShopUserRUDView,ShopUserCreateAPIView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/register/', RegistrationView.as_view(form_class=ShopUserForm, success_url="/"),name="django_registration_register"),
@@ -25,4 +29,11 @@ urlpatterns = [
     path('auth/',include("django.contrib.auth.urls")),
     re_path(r'^api/cars/', include(('shop.api.urls','shop'),namespace='api-cars')),
     re_path(r'^api/users/', include(('users.api.urls','users'),namespace='api-users')),
+    #re_path(r'^api/user/new', include(('users.api.urls','users'),namespace='api-users')),
+    path('api/user/<int:pk>/',ShopUserRUDView.as_view(),name='user-detail' ),
+    path('api/user/<int:pk>/new',ShopUserCreateAPIView.as_view(),name='user-create'),
+    # Token Authorization
+    # https://medium.aisultan.xyz/django-rest/django-rest-framework-jwt-authentication-94bee36f2af8
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

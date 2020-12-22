@@ -42,3 +42,8 @@ class Car(models.Model):
 
     def get_api_detail_url(self):
         return api_reverse("api-cars:car-rud",kwargs={'pk':self.pk})
+
+class Wishlist(models.Model):
+    post_id = user_id = models.ForeignKey(Car, default=1,on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, default=1, null=True,on_delete=models.CASCADE)
+    created_date = models.DateTimeField(auto_now_add=True)

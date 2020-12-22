@@ -2,7 +2,7 @@ from rest_framework import generics, mixins
 from shop.models import Car
 from .serializers import CarSerializer
 from rest_framework.permissions import BasePermission, IsAuthenticated,IsAuthenticatedOrReadOnly, SAFE_METHODS
-from .permission import IsOwnerOrReadOnly
+from .permissions import IsOwnerOrReadOnly
 from django.db.models import Q, F
 
 class ShopCarRUDView(generics.RetrieveUpdateDestroyAPIView):
@@ -25,7 +25,7 @@ class ShopCarRUDView(generics.RetrieveUpdateDestroyAPIView):
         return Car.objects.all()
 
 
-class ShopCarAPIView(mixins.CreateModelMixin, generics.ListAPIView):
+class ShopCarListAPIView(generics.ListAPIView):
     lookup_field = 'pk'
     serializer_class = CarSerializer
     permission_classes = [IsOwnerOrReadOnly]
